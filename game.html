@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>game 1</title>
+    <style>
+      canvas {
+        border: 1px black solid
+      }
+    </style>
+    <script src="lib/utils.js"></script>
+    <script src="lib/game.js"></script>
+    <script src="lib/image.js"></script>
+    <script src="lib/animation.js"></script>
+    <script src="lib/scene.js"></script>
+
+    <script src="scene/end/scene_end.js"></script>
+    <script src="scene/main/scene_main.js"></script>
+    <script src="config.js"></script>
+  </head>
+  <body>
+    <canvas id="id-canvas" width="288" height="400"></canvas>
+    <hr>
+    <input id="id-input-range" type="range" value="1">
+    <div class="controls">
+    </div>
+    <script src=main.js></script>
+    <script>
+      var es = sel => document.querySelectorAll(sel)
+      var bindAll = function(sel, eventName, callback) {
+        var l = es(sel)
+        for (var i = 0; i < l.length; i++) {
+          var input = l[i]
+          input.addEventListener(eventName, function(event) {
+            callback(event)
+          })
+        }
+      }
+      var templateControl = function(key, item) {
+          var t = `<div class="">
+                        <label>
+                        <input class='auto-slider' type="range" name="name" value="${item.value}" data-value="config.${key}">
+                            ${item._comment}：
+                            <span class="label"></span>
+                        </label>
+                    </div>`
+          return t
+      }
+      var insertControls = function () {
+          var div = e('.controls')
+
+          var keys = Object.keys(config)
+          for (const k of keys) {
+              var item = config[k]
+              var html = templateControl(k, item)
+              div.insertAdjacentHTML('beforeend', html)
+          }
+      }
+      var bindEvent = function() {
+          bindAll('.auto-slider', 'input', function(event) {
+              var target = event.target
+              var bindVar = target.dataset.value
+              var v = target.value
+              eval(bindVar + '.value =' + v)
+              var label = target.closest('label').querySelector('.label')
+              label.innerText = v
+          })
+      }
+      var __main = function () {
+          // 从配置文件生成html控件
+          insertControls()
+          bindEvent()
+      }
+      __main()
+    </script>
+  </body>
+</html>
